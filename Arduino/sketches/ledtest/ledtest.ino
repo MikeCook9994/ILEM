@@ -1,8 +1,8 @@
 #include <Adafruit_NeoPixel.h>
 
-#define SUB1_PIN 4
-#define SUB2_PIN 3
-#define SUB3_PIN 2
+#define SUB1_PIN 12
+#define SUB2_PIN 10
+#define SUB3_PIN 11d
 
 #define LED_COUNT 15
 
