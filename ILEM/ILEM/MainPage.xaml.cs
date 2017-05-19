@@ -4,6 +4,7 @@ using Windows.Devices.I2c;
 using System.Diagnostics;
 using System.Threading;
 using System;
+using Windows.UI.Xaml;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -19,10 +20,10 @@ namespace ILEM
         public MainPage()
         {
             this.InitializeComponent();
-            initcommunication();
+            //InitializeSerialCommunication();
         }
 
-        private async void initcommunication()
+        private async void InitializeSerialCommunication()
         {
             var settings = new I2cConnectionSettings(0x40); // Arduino address
             settings.BusSpeed = I2cBusSpeed.StandardMode;
@@ -34,17 +35,12 @@ namespace ILEM
 
         private void TimerCallback(object state)
         {
-            byte[] RegAddrBuf = new byte[] { 0x40 };
-            byte[] ReadBuf = new byte[5];
 
-            try
-            {
-                Device.Read(ReadBuf); // read the data
-            }
-            catch (Exception f)
-            {
-                Debug.WriteLine(f.Message);
-            }
+        }
+
+        private void ClickMe_Click(object sender, RoutedEventArgs e)
+        {
+            this.HelloMessage.Text = "Hello, Windows 10 IoT Core!";
         }
     }
 }
