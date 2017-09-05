@@ -4,17 +4,10 @@ void setup() {
   Wire.begin(0x40);                // join i2c bus with address #8
   Wire.onReceive(receiveEvent); // register event
 
-  pinMode(LED_BUILTIN, OUTPUT);
-
   Serial.begin(9600);           // start serial for output
 }
 
 void loop() {
-  //  digitalWrite(LED_BUILTIN, HIGH);
-  //  delay(500);
-  //  Wire.write("Hello Raspberry pi!");
-  //  digitalWrite(LED_BUILTIN, LOW);
-  //  delay(500);
 }
 
 // function that executes whenever data is received from master
