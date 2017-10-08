@@ -8,10 +8,27 @@
     mc:Ignorable="d">
 
     <Grid Background="White">
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" >
-            <TextBox x:Name="HelloMessage" Text="Hello, World!" Margin="10" IsReadOnly="True"/>
-            <Button x:Name="ClickMe" Content="Click Me!"  Margin="10" HorizontalAlignment="Center" Click="ClickMe_Click"/>
-            <TextBox x:Name="Messages" Margin="10" IsReadOnly="True" TextWrapping="Wrap" AcceptsReturn="True" Height="331" Width="243"/>
-        </StackPanel>
+        <Rectangle Fill="#000000" Margin="79,80,1599,760" Height="240" Width="240"/>
+        <Rectangle Name ="ColorPalette" Fill="#FFFFFF" Margin="98,100,1618,782" Height="200" Width="200"/>
+
+        <TextBlock Text="Red" Height="50" Width="240" Margin="80,325,1600,705" FontSize="30"/>
+        <Slider Name="RedSlider" Height="50" Width="240" Minimum="0" Maximum="255" Margin="80,373,1600,656" ValueChanged="ColorSliderChanged"/>
+        <TextBox Name="RedTextBox" Margin="349,368,1471,662" Height="50" Width="100" Text="0" FontSize="30" TextChanged="ColorTextBoxChanged"/>
+
+        <TextBlock Text="Green" Height="50" Width="240" Margin="80,429,1600,601" FontSize="30"/>
+        <Slider Name="GreenSlider" Height="50" Width="240" Minimum="0" Maximum="255" Margin="80,477,1600,552" ValueChanged="ColorSliderChanged"/>
+        <TextBox Name="GreenTextBox" Margin="349,472,1471,558" Height="50" Width="100" FontSize="30" Text="0" TextChanged="ColorTextBoxChanged"/>
+        
+        <TextBlock Text="Blue" Margin="80,533,1600,497" FontSize="30"/>
+        <Slider Name="BlueSlider" Height="50" Width="240" Minimum="0" Maximum="255" Margin="80,581,1600,448" ValueChanged="ColorSliderChanged"/>
+        <TextBox Name="BlueTextBox" Margin="349,576,1471,454" Height="50" Width="100" FontSize="30" Text="0" TextChanged="ColorTextBoxChanged"/>
+        
+        <TextBlock Text="LEDs per Strip" Margin="80,744,1600,286" FontSize="30"/>
+        <TextBox Name="LedPerStrip" Height="50" Width="240" Margin="80,899,1600,131"/>
+
+        <TextBlock Text="Number of Strips" Margin="80,849,1600,181" FontSize="30"/>
+        <TextBox Name="NumberOfStrips" Height="50" Width="240" Margin="80,794,1600,236"/>
+
+        <Button Name="InitializeStrips" Height="50" Width="240" Content="Initialize Strips" FontSize="24" Margin="80,972,0,58"/>
     </Grid>
 </Page>

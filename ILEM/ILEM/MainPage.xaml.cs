@@ -1,8 +1,6 @@
-﻿using Windows.UI.Xaml.Controls;
-using Windows.Devices.Enumeration;
-using Windows.Devices.I2c;
-using System;
-using Windows.UI.Xaml;
+﻿using System.Threading.Tasks;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -13,32 +11,80 @@ namespace ILEM
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private I2cDevice arduino;
+        private IColorPicker ColorPicker;
+
+        private ISerialWriter ArduinoSerialWriter;
 
         public MainPage()
         {
             this.InitializeComponent();
-            InitializeSerialCommunication();
+
+            this.ColorPicker = new ColorPicker(this.RedSlider, this.GreenSlider, this.BlueSlider, this.ColorPalette);
+
+            this.ArduinoSerialWriter = new SerialWriter();
+            Task initTask = Task.Run(() => this.ArduinoSerialWriter.InitializeConnection(0x40, "I2C1"));
+
+            while(!initTask.IsCompleted)
+            {
+                // spin until the task completes
+            }
+
+            SendUpdatedColor();
         }
 
-        private async void InitializeSerialCommunication()
+        private void ColorSliderChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
-            var settings = new I2cConnectionSettings(0x40); // Arduino address
+            this.ColorPicker.UpdatePaletteColor();
 
-            string aqs = I2cDevice.GetDeviceSelector("I2C1");
-            var dis = await DeviceInformation.FindAllAsync(aqs);
-            arduino = await I2cDevice.FromIdAsync(dis[0].Id, settings);
+            string sliderName = (sender as Slider).Name;
+            if (sliderName.Contains("Red"))
+            {
+                this.RedTextBox.Text = (sender as Slider).Value.ToString();
+            }
+            else if (sliderName.Contains("Green"))
+            {
+                this.GreenTextBox.Text = (sender as Slider).Value.ToString();
+            }
+            else
+            {
+                this.BlueTextBox.Text = (sender as Slider).Value.ToString();
+            }
 
-            Messages.Text += arduino.ConnectionSettings.BusSpeed;
-            Messages.Text += arduino.ConnectionSettings.SharingMode;
-            Messages.Text += arduino.ConnectionSettings.SlaveAddress;
-            Messages.Text += arduino.DeviceId;
+            SendUpdatedColor();
         }
 
-        private void ClickMe_Click(object sender, RoutedEventArgs e)
+        private void ColorTextBoxChanged(object sender, TextChangedEventArgs e)
         {
-            this.HelloMessage.Text = "Hello, Windows 10 IoT Core!";
-            this.arduino.Write(System.Text.Encoding.ASCII.GetBytes("Hello Arduino"));
+            string textBoxName = (sender as TextBox).Name;
+            if(textBoxName.Contains("Red"))
+            {
+                double tmpValue;
+                double.TryParse((sender as TextBox).Text, out tmpValue);
+                this.RedSlider.Value = tmpValue;
+            }
+            else if(textBoxName.Contains("Green"))
+            {
+                double tmpValue;
+                double.TryParse((sender as TextBox).Text, out tmpValue);
+                this.GreenSlider.Value = tmpValue;
+            }
+            else
+            {
+                double tmpValue;
+                double.TryParse((sender as TextBox).Text, out tmpValue);
+                this.BlueSlider.Value = tmpValue;
+            }
+
+            SendUpdatedColor();
+        }
+
+        private void SendUpdatedColor()
+        {
+            byte[] colorAsBytes = new byte[3];
+            colorAsBytes[0] = (byte)this.RedSlider.Value;
+            colorAsBytes[1] = (byte)this.GreenSlider.Value;
+            colorAsBytes[2] = (byte)this.BlueSlider.Value;
+            this.ArduinoSerialWriter.Write(colorAsBytes);
         }
     }
 }
